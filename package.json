@@ -1,0 +1,26 @@
+{
+  "name": "report.elastic.mongo",
+  "version": "1.0.0",
+  "description": "repository to compare data in elasticsearch and mongodb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoRoca/report.elastic.mongo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HugoRoca/report.elastic.mongo/issues"
+  },
+  "homepage": "https://github.com/HugoRoca/report.elastic.mongo#readme",
+  "dependencies": {
+    "elasticsearch": "^16.6.0",
+    "mongodb": "^3.5.3",
+    "table": "^5.4.6",
+    "yargs": "^15.1.0"
+  }
+}
