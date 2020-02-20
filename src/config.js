@@ -29,6 +29,25 @@ const config = {
                 }
             }
         ]
+    },
+    ELASTICSEARCH: {
+        REQUEST_TIMEOUT: 60000,
+        INDEX_NAME: "producto_v2",
+        INDEX_TYPE: "_doc",
+        CLUSTERS: [
+            {
+                ENDPOINT: "https://vpc-es-sbsearch-prd-a5xq7pyb6cvphjra33ojtejvwa.us-east-1.es.amazonaws.com",
+                COUNTRIES: ["PE", "CL", "CR", "GT"]
+            },
+            {
+                ENDPOINT: "https://vpc-es-sbsearch2-prd-zy7ytdwgfleiwpive3meis5lzy.us-east-1.es.amazonaws.com",
+                COUNTRIES: ["CO", "PA", "DO", "SV"]
+            },
+            {
+                ENDPOINT: "https://vpc-es-sbsearch3-prd-x6yhgte2h3opuz5lyog56xwtla.us-east-1.es.amazonaws.com",
+                COUNTRIES: ["MX", "EC", "BO", "PR"]
+            }
+        ]
     }
 };
 
