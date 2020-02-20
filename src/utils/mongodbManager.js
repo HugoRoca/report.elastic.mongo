@@ -1,11 +1,11 @@
 const Mongo = require("mongodb").MongoClient;
-const yenv = require('yenv');
-const env = yenv();
+const config = require("../config");
 
 module.exports = class MongodbManager {
     getCluster(country) {
-        for (let i = 0; i < env.MONGODB.CLUSTERS.length; i++) {
-            const item = env.MONGODB.CLUSTERS[i];
+        console.log(config.MONGODB);
+        for (let i = 0; i < config.MONGODB.CLUSTERS.length; i++) {
+            const item = config.MONGODB.CLUSTERS[i];
             let keys = Object.keys(item.COUNTRIES);
             if (keys.some((x) => x === country)) {
                 return {
