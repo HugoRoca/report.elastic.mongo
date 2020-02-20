@@ -1,5 +1,5 @@
 module.exports = class MongoQuerys {
-    static aggreagatePersonalization(campaign, personalization) {
+    static aggregatePersonalization(campaign, personalization) {
         return [
             {
                 $match: {
