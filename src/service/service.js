@@ -30,11 +30,14 @@ module.exports = class Service {
                     totalPersonalization += arrStrategy.data.some(x => x.CUV2 === personalizationObj._id.cuv) ? 0 : personalizationObj.count;
                 }
 
+                let difference = this.numberWithCommas((totalPersonalization - (arrElasticsearch ? arrElasticsearch.doc_count : 0)));
+
                 paintConsole.push({
-                    campign: cam,
+                    campaign: cam,
                     personalization: per,
-                    mongoCount: totalPersonalization,
-                    elasticCount: arrElasticsearch.doc_count
+                    mongoCount: this.numberWithCommas(totalPersonalization),
+                    elasticCount: this.numberWithCommas((arrElasticsearch ? arrElasticsearch.doc_count : 0)),
+                    difference: difference
                 });
             }
             console.table(paintConsole);
@@ -104,5 +107,11 @@ module.exports = class Service {
         data.personalization = await Promise.all(promisesPersonalization);
         data.strategy = await Promise.all(promisesStrategy);
         return data;
+    }
+
+    numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
     }
 }
