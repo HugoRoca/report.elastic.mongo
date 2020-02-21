@@ -1,4 +1,4 @@
-module.exports = class ElasticsearchQuery {
+module.exports = class ElasticsearchQuerys {
     static search() {
         return {
             "size": 0,

@@ -3,7 +3,6 @@ const config = require("../config");
 
 module.exports = class MongodbManager {
     getCluster(country) {
-        console.log(config.MONGODB);
         for (let i = 0; i < config.MONGODB.CLUSTERS.length; i++) {
             const item = config.MONGODB.CLUSTERS[i];
             let keys = Object.keys(item.COUNTRIES);
