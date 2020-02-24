@@ -1,11 +1,16 @@
 const Service = require("./service/service");
 const argv = require('yargs').argv
+
+// example exacute command
 // node src/server.js --country=PE --campaign=202004,202005 --personalization=sr,opm,odd
+
+// dthis discomment for debbuger
 // argv = {
 //     country: "CR",
 //     campaign: "202004,202005",
 //     personalization: "sr,opm,odd"
 // }
+
 if (!argv.country || !argv.campaign || !argv.personalization) {
     console.log("Check if the country, personalization and campaign parameters exist");
 } else {
