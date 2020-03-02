@@ -1,10 +1,10 @@
 module.exports = class ElasticsearchQuerys {
-    static search() {
+    static search(active) {
         return {
             "size": 0,
             "query":{
                 "term":{
-                    "activo": true
+                    "activo": active
                 }
             },
             "aggs": {
@@ -16,4 +16,5 @@ module.exports = class ElasticsearchQuerys {
             }
         }
     }
+
 }

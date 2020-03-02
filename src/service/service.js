@@ -23,20 +23,40 @@ module.exports = class Service {
                 let arrPersonalization = this.getArrayFromData(data.personalization, cam, per);
                 let arrStrategy = this.getArrayFromData(data.strategy, cam, per);
                 let arrElasticsearch = this.getArrayFromData(data.elasticSearch, cam, per, true);
+                let arrElasticsearchNotActive = this.getArrayFromData(data.elasticSearchNotActive, cam, per, true);
 
                 let totalPersonalization = 0;
+                let totalCuvsActive = 0;
+                let totalPersonalizationNotActive = 0;
+                let totalCuvsNotActive = 0;
+
                 for (let arrPer = 0; arrPer < arrPersonalization.data.length; arrPer++) {
                     const personalizationObj = arrPersonalization.data[arrPer];
-                    totalPersonalization += arrStrategy.data.some(x => x.CUV2 === personalizationObj._id.cuv) ? 0 : personalizationObj.count;
+
+                    if (arrStrategy.data.find(x => x.Activo === true && x.CUV2 === personalizationObj._id.cuv)) {
+                        totalPersonalization += personalizationObj.count;
+                        totalCuvsActive++;
+                    } else {
+                        totalPersonalizationNotActive += personalizationObj.count;
+                        totalCuvsNotActive++;
+                    }
+                    //totalPersonalization += arrStrategy.data.find(x => x.CUV2 === personalizationObj._id.cuv) ? 0 : personalizationObj.count;
                 }
 
-                let difference = this.numberWithCommas((totalPersonalization - (arrElasticsearch ? arrElasticsearch.doc_count : 0)));
+                let difference = this.numberWithCommas(totalPersonalization > 0 ?
+                    (totalPersonalization - (arrElasticsearch ? arrElasticsearch.doc_count : 0)) :
+                    (arrElasticsearch ? arrElasticsearch.doc_count : 0)
+                );
 
                 paintConsole.push({
                     campaign: cam,
                     personalization: per,
-                    mongoCount: this.numberWithCommas(totalPersonalization),
-                    elasticCount: this.numberWithCommas((arrElasticsearch ? arrElasticsearch.doc_count : 0)),
+                    ActiveCuvs: totalCuvsActive,
+                    ActiveMongo: this.numberWithCommas(totalPersonalization),
+                    ActiveElastic: this.numberWithCommas((arrElasticsearch ? arrElasticsearch.doc_count : 0)),
+                    NotActiveCuvs: totalCuvsNotActive,
+                    NotActiveMongo: totalPersonalizationNotActive,
+                    NotActiveElastic: this.numberWithCommas((arrElasticsearchNotActive ? arrElasticsearchNotActive.doc_count : 0)),
                     difference: difference
                 });
             }
@@ -68,7 +88,9 @@ module.exports = class Service {
     async getDataMongoElasticsearch(country, campaign, personalization) {
         let promisesPersonalization = [];
         let promisesStrategy = [];
-        let promisesSearchES = [];
+        let promisesSearchESActive = [];
+        let promisesSearchESNotActive = [];
+
         const cluster = this.mongodbManager.getCluster(country);
         const client = await this.mongodbManager.getClient(country);
         const db = client.db(cluster.dataBase);
@@ -94,16 +116,19 @@ module.exports = class Service {
                     }
                 }));
             }
-            const querySearch = ElasticsearchQuerys.search();
-            promisesSearchES.push(this.elasticManager.search(country, cam, querySearch).then(res => {
-                return {
-                    campaign: cam,
-                    data: res
-                }
+            const querySearchOne = ElasticsearchQuerys.search(true);
+            promisesSearchESActive.push(this.elasticManager.search(country, cam, querySearchOne).then(res => {
+                return this.returnDataElastic(cam, res);
             }));
+
+            const querySearchTwo = ElasticsearchQuerys.search(false);
+            promisesSearchESNotActive.push(this.elasticManager.search(country, cam, querySearchTwo).then(res => {
+                return this.returnDataElastic(cam, res);
+            }))
         }
         let data = {};
-        data.elasticSearch = await Promise.all(promisesSearchES);
+        data.elasticSearchNotActive = await Promise.all(promisesSearchESNotActive);
+        data.elasticSearch = await Promise.all(promisesSearchESActive);
         data.personalization = await Promise.all(promisesPersonalization);
         data.strategy = await Promise.all(promisesStrategy);
         return data;
@@ -113,5 +138,12 @@ module.exports = class Service {
         var parts = x.toString().split(".");
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         return parts.join(".");
+    }
+
+    returnDataElastic(campaign, data) {
+        return {
+            campaign,
+            data: data
+        }
     }
 }

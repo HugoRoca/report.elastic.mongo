@@ -25,7 +25,7 @@ module.exports = class MongodbManager {
         return new Promise((resolve, reject) => {
             try {
                 let data = typeAction === 'find' ?
-                    mongoClient.collection(`${collection}`)[typeAction](query).project({ CUV2: 1 }).toArray() :
+                    mongoClient.collection(`${collection}`)[typeAction](query).project({ CUV2: 1, Activo: 1}).toArray() :
                     mongoClient.collection(`${collection}`)[typeAction](query).toArray();
                 resolve(data);
             } catch (error) {

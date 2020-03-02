@@ -22,8 +22,7 @@ module.exports = class MongoQuerys {
     static findStrategy(campaign, personalization) {
         return {
             CodigoCampania: `${campaign}`,
-            TipoPersonalizacion: `${personalization.toUpperCase()}`,
-            Activo: false
+            TipoPersonalizacion: `${personalization.toUpperCase()}`
         }
     }
 }
