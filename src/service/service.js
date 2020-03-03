@@ -62,13 +62,16 @@ module.exports = class Service {
                     CAMPAIGN: cam,
                     PERSONALIZATION: per,
                     CUVS: totalCuvsNotActive,
-                    MONGO: totalPersonalization,
+                    MONGO: totalPersonalizationNotActive,
                     ELASTIC: (arrElasticsearchNotActive ? arrElasticsearchNotActive.doc_count : 0)
                 });
             }
-            console.log("------------- CUVS ACTIVOS -------------");
+            console.log("==========================================================");
+            console.log("====================== CUVS ACTIVOS ======================");
             console.table(paintConsole);
-            console.log("----------- CUVS NO ACTIVOS ------------");
+            console.log("");
+            console.log("==========================================================");
+            console.log("==================== CUVS NO ACTIVOS =====================");
             console.table(paintConsoleNotActive);
         }
         return true;
