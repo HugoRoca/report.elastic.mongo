@@ -18,6 +18,7 @@ module.exports = class Service {
         for (let c = 0; c < campaign.length; c++) {
             const cam = campaign[c];
             let paintConsole = [];
+            let paintConsoleNotActive = [];
             for (let p = 0; p < personalization.length; p++) {
                 const per = personalization[p];
                 let arrPersonalization = this.getArrayFromData(data.personalization, cam, per);
@@ -49,18 +50,26 @@ module.exports = class Service {
                 );
 
                 paintConsole.push({
-                    campaign: cam,
-                    personalization: per,
-                    ActiveCuvs: totalCuvsActive,
-                    ActiveMongo: this.numberWithCommas(totalPersonalization),
-                    ActiveElastic: this.numberWithCommas((arrElasticsearch ? arrElasticsearch.doc_count : 0)),
-                    NotActiveCuvs: totalCuvsNotActive,
-                    NotActiveMongo: totalPersonalizationNotActive,
-                    NotActiveElastic: this.numberWithCommas((arrElasticsearchNotActive ? arrElasticsearchNotActive.doc_count : 0)),
-                    difference: difference
+                    CAMPAIGN: cam,
+                    PERSONALIZATION: per,
+                    CUVS: totalCuvsActive,
+                    MONGO: totalPersonalization,
+                    ELASTIC: (arrElasticsearch ? arrElasticsearch.doc_count : 0),
+                    DIFF: difference
+                });
+
+                paintConsoleNotActive.push({
+                    CAMPAIGN: cam,
+                    PERSONALIZATION: per,
+                    CUVS: totalCuvsNotActive,
+                    MONGO: totalPersonalization,
+                    ELASTIC: (arrElasticsearchNotActive ? arrElasticsearchNotActive.doc_count : 0)
                 });
             }
+            console.log("------------- CUVS ACTIVOS -------------");
             console.table(paintConsole);
+            console.log("----------- CUVS NO ACTIVOS ------------");
+            console.table(paintConsoleNotActive);
         }
         return true;
     }
